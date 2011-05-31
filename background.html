@@ -2,7 +2,21 @@
 <html>
 <head>
     <script>
-        var debug = true;
+        var debug = true,
+            animate_icon = true,
+            image_index = 0,
+            eq_images = [
+                "icons/icon_playing_19x19_1.png",
+                "icons/icon_playing_19x19_2.png",
+                "icons/icon_playing_19x19_3.png",
+                "icons/icon_playing_19x19_4.png",
+                "icons/icon_playing_19x19_5.png",
+                "icons/icon_playing_19x19_6.png",
+                "icons/icon_playing_19x19_7.png",
+                "icons/icon_playing_19x19_8.png",
+                "icons/icon_playing_19x19_9.png"
+            ];
+
 
         // Find a the first tab in the current window that is showing Music Beta
         // and call callback with the id of that tab.
@@ -44,56 +58,38 @@
 
         // Update the Browser Action based on the provided Play/Pause/Other state.
         function UpdateIcon(state) {
-            console.log('update icon bitches! ' + state);
-            var animate_icon = true;
-
             if (state == "Pause") {
                 animate_icon = true;
-                var image_index = 0,
-                    eq_images = [
-                        "icons/icon_playing_19x19_1.png",
-                        "icons/icon_playing_19x19_2.png",
-                        "icons/icon_playing_19x19_3.png",
-                        "icons/icon_playing_19x19_4.png",
-                        "icons/icon_playing_19x19_5.png",
-                        "icons/icon_playing_19x19_6.png",
-                        "icons/icon_playing_19x19_7.png",
-                        "icons/icon_playing_19x19_8.png",
-                        "icons/icon_playing_19x19_9.png"
-                    ];
-
-                function animate_eq_icon() {
-                    if (animate_icon) {
-                        if (debug) {
-                            console.log('animating icon...');
-                        }
-                        chrome.browserAction.setIcon({path: eq_images[image_index]});
-                        image_index = (image_index + 1) % eq_images.length;
-
-                        t = window.setTimeout(animate_eq_icon, 100);
-                    }
-                }
-                t = window.setTimeout(animate_eq_icon, 100);
             } else if (state == "Play") {
                 animate_icon = false;
-                clearTimeout(t);
                 chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
             } else {
                 animate_icon = false;
-                clearTimeout(t);
                 chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
             }
         }
-
+        
         // Get the play state from a MusicBeta tab and call UpdateIcon with it.
         function UpdateIconFromPageState() {
             GetGmTab(function(tab_id) {
                 if (tab_id)
                     chrome.tabs.sendRequest(tab_id, "getPlayState", UpdateIcon);
                 else
-                    chrome.browserAction.setIcon({path: "logo-19x19.png"});
+                    chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
             });
         }
+
+        function init_eq_icon_animation() {
+            if (animate_icon) {
+                chrome.browserAction.setIcon({path: eq_images[image_index]});
+                image_index = (image_index + 1) % eq_images.length;
+            }
+            window.setTimeout(init_eq_icon_animation, 100);
+        }
+        
+        // Set our timeout onload
+        window.setTimeout(init_eq_icon_animation, 100);
+
         // Initial update based on initial state when we get loaded.
         UpdateIconFromPageState();
 
@@ -106,6 +102,7 @@
 
         // Called when the user clicks on the browser action.
         chrome.browserAction.onClicked.addListener(function (tab) {
+            UpdateIconFromPageState();
             sendCommand('playPause');
         });
 
