@@ -3,7 +3,7 @@
 <head>
     <script>
         var debug = true,
-            animate_icon = true,
+            animate_icon = false,
             image_index = 0,
             eq_images = [
                 "icons/icon_playing_19x19_1.png",
@@ -62,20 +62,19 @@
                 animate_icon = true;
             } else if (state == "Play") {
                 animate_icon = false;
-                chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
             } else {
                 animate_icon = false;
-                chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
             }
         }
         
         // Get the play state from a MusicBeta tab and call UpdateIcon with it.
         function UpdateIconFromPageState() {
             GetGmTab(function(tab_id) {
-                if (tab_id)
+                if (tab_id) {
                     chrome.tabs.sendRequest(tab_id, "getPlayState", UpdateIcon);
-                else
-                    chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
+                } else {
+                    animate_icon = false;
+                }
             });
         }
 
@@ -83,6 +82,8 @@
             if (animate_icon) {
                 chrome.browserAction.setIcon({path: eq_images[image_index]});
                 image_index = (image_index + 1) % eq_images.length;
+            } else {
+                chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
             }
             window.setTimeout(init_eq_icon_animation, 100);
         }
