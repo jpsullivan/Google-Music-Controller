@@ -1,0 +1,21 @@
+{
+    "name": "Google Music Controller",
+    "version": "1.0",
+    "description": "Control Google Music using the keyboard instead of having to manually navigate to that particular tab.",
+    "browser_action": {
+        "default_icon": "icons/icon_19x19.png"
+    },
+    "permissions": [
+        "*://music.google.com/*",
+        "tabs"
+    ],
+    "background_page": "background.html",
+    "omnibox": {
+        "keyword" : "gm"
+    },
+    "content_scripts": [ {
+        "js": [ "js/jquery-1.6.1-min.js", "js/contentscript.js" ],
+        "matches": [ "*://music.google.com/*" ],
+        "run_at": "document_end"
+    }]
+}

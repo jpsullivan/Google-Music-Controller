@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        var debug = true;
+
+        // Find a the first tab in the current window that is showing Music Beta
+        // and call callback with the id of that tab.
+        // TODO(mad): Move to common location.
+        function GetGmTab(callback) {
+            chrome.windows.getAll({populate: true}, function(windows) {
+                var pattern = 'https?\:\/\/music\.google\.com\/music\/listen.*';
+                for (var window = 0; window < windows.length; window++) {
+                    for (var i = 0; i < windows[window].tabs.length; i++) {
+                        if (windows[window].tabs[i].url.match(pattern)) {
+                            callback(windows[window].tabs[i].id)
+                            return;
+                        }
+                    }
+                }
+                callback(null);
+            });
+        }
+
+        // Send the given command to a tab showing Music Beta,
+        // or open one if non exists.
+        function sendCommand(command) {
+            GetGmTab(function(tab_id) {
+                if (tab_id) {
+                    if (command == "foreground") {
+                        chrome.tabs.update(tab_id, {selected: true});
+                    } else {
+                        chrome.tabs.executeScript(tab_id,
+                        {
+                            code: "location.assign('javascript:SJBpost(\"" + command + "\"); return false');",
+                            allFrames: true
+                        });
+                    }
+                } else {
+                    chrome.tabs.create({url: 'http://music.google.com/music/listen', selected: true});
+                }
+            });
+        }
+
+        // Update the Browser Action based on the provided Play/Pause/Other state.
+        function UpdateIcon(state) {
+            console.log('update icon bitches! ' + state);
+            var animate_icon = true;
+
+            if (state == "Pause") {
+                animate_icon = true;
+                var image_index = 0,
+                    eq_images = [
+                        "icons/icon_playing_19x19_1.png",
+                        "icons/icon_playing_19x19_2.png",
+                        "icons/icon_playing_19x19_3.png",
+                        "icons/icon_playing_19x19_4.png",
+                        "icons/icon_playing_19x19_5.png",
+                        "icons/icon_playing_19x19_6.png",
+                        "icons/icon_playing_19x19_7.png",
+                        "icons/icon_playing_19x19_8.png",
+                        "icons/icon_playing_19x19_9.png"
+                    ];
+
+                function animate_eq_icon() {
+                    if (animate_icon) {
+                        if (debug) {
+                            console.log('animating icon...');
+                        }
+                        chrome.browserAction.setIcon({path: eq_images[image_index]});
+                        image_index = (image_index + 1) % eq_images.length;
+
+                        t = window.setTimeout(animate_eq_icon, 100);
+                    }
+                }
+                t = window.setTimeout(animate_eq_icon, 100);
+            } else if (state == "Play") {
+                animate_icon = false;
+                clearTimeout(t);
+                chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
+            } else {
+                animate_icon = false;
+                clearTimeout(t);
+                chrome.browserAction.setIcon({path: "icons/icon_19x19.png"});
+            }
+        }
+
+        // Get the play state from a MusicBeta tab and call UpdateIcon with it.
+        function UpdateIconFromPageState() {
+            GetGmTab(function(tab_id) {
+                if (tab_id)
+                    chrome.tabs.sendRequest(tab_id, "getPlayState", UpdateIcon);
+                else
+                    chrome.browserAction.setIcon({path: "logo-19x19.png"});
+            });
+        }
+        // Initial update based on initial state when we get loaded.
+        UpdateIconFromPageState();
+
+        // React to tabs notifications by updating our icon state if needed.
+        chrome.tabs.onAttached.addListener(UpdateIconFromPageState);
+        chrome.tabs.onDetached.addListener(UpdateIconFromPageState);
+        chrome.tabs.onCreated.addListener(UpdateIconFromPageState);
+        chrome.tabs.onRemoved.addListener(UpdateIconFromPageState);
+        chrome.tabs.onUpdated.addListener(UpdateIconFromPageState);
+
+        // Called when the user clicks on the browser action.
+        chrome.browserAction.onClicked.addListener(function (tab) {
+            sendCommand('playPause');
+        });
+
+        // Called when the Play/Pause state changes.
+        chrome.extension.onRequest.addListener(function(message, sender, callback) {
+            UpdateIconFromPageState();
+            callback();
+        });
+
+        // Omnibox support, add and react to a list of suggest commands.
+        chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
+            var suggestions = [
+                { content: "sk", description: "Skip" },
+                { content: "rs", description: "Restart" },
+                { content: "pp", description: "Play/Pause" },
+                { content: "tb", description: "Go to Google Music tab" }
+            ];
+            suggest(suggestions);
+        });
+        chrome.omnibox.onInputEntered.addListener(function (text) {
+            if (text.toLowerCase().match('pp')) {
+                sendCommand('playPause');
+            } else if (text.toLowerCase().match('rs')) {
+                sendCommand('prevSong');
+            } else if (text.toLowerCase().match('sk')) {
+                sendCommand('nextSong');
+            } else if (text.toLowerCase().match('tb')) {
+                sendCommand('foreground');
+            }
+        });
+    </script>
+</head>
+</html>
