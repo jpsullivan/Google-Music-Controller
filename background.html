@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src='js/jquery-1.6.1-min.js'></script>
     <script>
-        var debug = true,
-            animate_icon = false,
+        var animate_icon = false,
             image_index = 0,
             eq_images = [
                 "icons/icon_playing_19x19_1.png",
@@ -37,12 +37,16 @@
         }
 
         // Send the given command to a tab showing Music Beta,
-        // or open one if non exists.
+        // or open one if none exists.
         function sendCommand(command) {
             GetGmTab(function(tab_id) {
                 if (tab_id) {
                     if (command == "foreground") {
                         chrome.tabs.update(tab_id, {selected: true});
+                    } else if (command == 'thumbsUp') {
+                        chrome.tabs.sendRequest(tab_id, {command: "upvote_selected_track"});
+                    } else if (command == 'thumbsDown') {
+                        chrome.tabs.sendRequest(tab_id, {command: "downvote_selected_track"});
                     } else {
                         chrome.tabs.executeScript(tab_id,
                         {
@@ -116,9 +120,11 @@
         // Omnibox support, add and react to a list of suggest commands.
         chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
             var suggestions = [
-                { content: "sk", description: "Skip" },
-                { content: "rs", description: "Restart" },
                 { content: "pp", description: "Play/Pause" },
+                { content: "sk", description: "Skip" },
+                { content: "tu", description: "Thumbs Up" },
+                { content: "td", description: "Thumbs Down" },
+                { content: "rs", description: "Restart" },
                 { content: "tb", description: "Go to Google Music tab" }
             ];
             suggest(suggestions);
@@ -130,6 +136,10 @@
                 sendCommand('prevSong');
             } else if (text.toLowerCase().match('sk')) {
                 sendCommand('nextSong');
+            } else if (text.toLowerCase().match('tu')) {
+                sendCommand('thumbsUp');
+            } else if (text.toLowerCase().match('td')) {
+                sendCommand('thumbsDown');
             } else if (text.toLowerCase().match('tb')) {
                 sendCommand('foreground');
             }
