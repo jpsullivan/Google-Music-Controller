@@ -3,6 +3,16 @@
 <head>
     <script src='js/jquery-1.6.1-min.js'></script>
     <script>
+        var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-23816337-1']);
+         _gaq.push(['_trackPageview']);
+
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = 'https://ssl.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+
         var animate_icon = false,
             image_index = 0,
             eq_images = [
@@ -107,12 +117,14 @@
 
         // Called when the user clicks on the browser action.
         chrome.browserAction.onClicked.addListener(function (tab) {
+            _gaq.push(['_trackEvent', 'extension icon: clicked for play/pause']);
             UpdateIconFromPageState();
             sendCommand('playPause');
         });
 
         // Called when the Play/Pause state changes.
         chrome.extension.onRequest.addListener(function(message, sender, callback) {
+            _gaq.push(['_trackEvent', 'manually play/paused track from gm']);
             UpdateIconFromPageState();
             callback();
         });
@@ -131,16 +143,22 @@
         });
         chrome.omnibox.onInputEntered.addListener(function (text) {
             if (text.toLowerCase().match('pp')) {
+                _gaq.push(['_trackEvent', 'omnibox command: pp (play/pause)']);
                 sendCommand('playPause');
             } else if (text.toLowerCase().match('rs')) {
+                _gaq.push(['_trackEvent', 'omnibox command: rs (restart)']);
                 sendCommand('prevSong');
             } else if (text.toLowerCase().match('sk')) {
+                _gaq.push(['_trackEvent', 'omnibox command: sk (skip)']);
                 sendCommand('nextSong');
             } else if (text.toLowerCase().match('tu')) {
+                _gaq.push(['_trackEvent', 'omnibox command: tu (thumbs up)']);
                 sendCommand('thumbsUp');
             } else if (text.toLowerCase().match('td')) {
+                _gaq.push(['_trackEvent', 'omnibox command: td (thumbs down)']);
                 sendCommand('thumbsDown');
             } else if (text.toLowerCase().match('tb')) {
+                _gaq.push(['_trackEvent', 'omnibox command: tb (foreground)']);
                 sendCommand('foreground');
             }
         });
