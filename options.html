@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="css/options.css" media="screen" rel="stylesheet" type="text/css" />
+<script src='js/jquery-1.6.1-min.js'></script>
+<script>
+    $(document).ready(function() {
+        // Get application name and version number
+        $.getJSON('manifest.json', function(response) {
+            var application_title = response.name,
+                application_version = "v" + response.version;
+            $('#application_version').html(application_title + " " + application_version);
+        });
+    });
+</script>
+</head>
+<body>
+<div id="main-content">
+<div id="navbar-container" style="left: 0px; ">
+    <h1 id="settings-title" i18n-content="title">Options</h1>
+    <h1 id="application_version"></h1>
+    <ul id="navbar">
+        <li id="browserPageNav" class="navbar-item navbar-item-selected" pagename="browser" tabindex="0">Basics</li>
+    </ul>
+</div>
+<div id="mainview">
+<div id="subpage-backdrop" hidden="" style="top: 0px; left: 216px; "></div>
+<div id="mainview-content">
+<div id="toplevel-page-container">
+    <!-- Please keep the main pages in desired order of display.  This will
+allow search results to display in the desired order. -->
+
+
+    <div id="browserPage" class="page">
+        <h1 i18n-content="browserPage">Basics</h1>
+        <section id="startupSection">
+            <h3 i18n-content="startupGroupName">On startup</h3>
+
+            <div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="startup" pref="session.restore_on_startup" value="0"
+                               metric="Options_Startup_Homepage">
+                        <span i18n-content="startupShowDefaultAndNewTab">Open the home page</span>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="startup" pref="session.restore_on_startup" value="1"
+                               metric="Options_Startup_LastSession">
+                        <span i18n-content="startupShowLastSession">Reopen the pages that were open last</span>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input id="startupShowPagesButton" type="radio" name="startup" pref="session.restore_on_startup"
+                               value="4" metric="Options_Startup_Custom">
+                        <span id="startupShowPagesLabel"
+                              i18n-content="startupShowPages">Open the following pages:</span>
+                    </label>
+                </div>
+                <div class="suboption">
+                    <div id="startupPageManagement" class="settings-list">
+                        <list id="startupPagesList" tabindex="0" inlineeditable="" disabled="disabled">
+                            <div class="spacer" style="height: 0px; "></div>
+                            <div class="deletable-item">
+                                <div>
+                                    <div class="title favicon-cell">Add a new page</div>
+                                    <div class="url"><input type="text" required=""></div>
+                                </div>
+                                <button class="raw-button close-button" disabled=""></button>
+                            </div>
+                            <div class="spacer" style="height: 0px; "></div>
+                        </list>
+                        <div>
+                            <button id="startupUseCurrentButton" i18n-content="startupUseCurrent" disabled="">Use
+                                current pages
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h3 i18n-content="homepageGroupName">Home page</h3>
+
+            <div>
+                <div class="radio">
+                    <label>
+                        <input id="homepageUseNTPButton" type="radio" name="homepage" value="true"
+                               metric="Options_Homepage_IsNewTabPage">
+                        <span i18n-content="homepageUseNewTab">Use the New Tab page</span>
+                    </label>
+                </div>
+                <div id="customHomePageGroup">
+                    <div class="radio">
+                        <label>
+                            <input id="homepageUseURLButton" type="radio" name="homepage" value="false"
+                                   metric="Options_Homepage_IsNewTabPage">
+                            <span i18n-content="homepageUseURL">Open this page:</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input id="homepageURL" class="favicon-cell" type="url" disabled=""
+                               style="background-image: url(chrome://favicon/http://www.google.com/); ">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h3 i18n-content="toolbarGroupName">Toolbar</h3>
+
+            <div>
+                <div class="checkbox">
+                    <label>
+                        <input id="toolbarShowHomeButton" pref="browser.show_home_button"
+                               metric="Options_Homepage_HomeButton" type="checkbox">
+                        <span i18n-content="toolbarShowHomeButton">Show Home button</span>
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input id="toolbarShowBookmarksBar" pref="bookmark_bar.show_on_all_tabs"
+                               metric="ShowBookmarksBar" type="checkbox">
+                        <span i18n-content="toolbarShowBookmarksBar">Always show the bookmarks bar</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h3 i18n-content="defaultSearchGroupName">Search</h3>
+
+            <div id="defaultSearchEngineGroup">
+                <div>
+                    <select id="defaultSearchEngine">
+                        <option value="0">Google</option>
+                        <option value="1">Yahoo!</option>
+                        <option value="2">Bing</option>
+                    </select>
+                    <button id="defaultSearchManageEnginesButton" i18n-content="defaultSearchManageEngines">Manage
+                        search engines...
+                    </button>
+                </div>
+                <div id="instantOption" class="checkbox">
+                    <label>
+                        <!-- TODO(estade): metric? -->
+                        <input id="instantEnableCheckbox" type="checkbox" pref="instant.enabled">
+                        <span i18n-content="instantName">Enable Instant for faster searching and browsing</span>
+                    </label>
+                </div>
+                <div class="suboption informational-text">
+                    <span i18n-content="instantWarningText">Omnibox input may be logged</span>
+                    <a target="_blank" i18n-values="href:instantLearnMoreLink" i18n-content="learnMore"
+                       href="http://www.google.com/support/chrome/bin/answer.py?answer=180655&amp;hl=en">Learn more</a>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h3 i18n-content="defaultBrowserGroupName">Default browser</h3>
+
+            <div>
+                <button id="defaultBrowserUseAsDefaultButton" i18n-content="defaultBrowserUseAsDefault" disabled="">Make
+                    Google Chrome my default browser
+                </button>
+                <div id="defaultBrowserState" i18n-content="defaultBrowserUnknown">The default browser is currently
+                    Google Chrome.
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+</div>
+<div id="subpage-sheet-container-1" class="subpage-sheet-container transparent" hidden="" style="height: 552px; ">
+<div id="subpage-sheet-1" class="subpage-sheet">
+<button class="raw-button close-subpage"></button>
+<div class="subpage-sheet-contents">
+
+<div id="certificateManagerPage" class="page" hidden="">
+    <h1 i18n-content="certificateManagerPage">undefined</h1>
+    <!-- Navigation tabs -->
+    <div class="subpages-nav-tabs">
+    <span id="personal-certs-nav-tab" class="tab" tab-contents="personalCertsTab">
+      <span class="tab-label" i18n-content="personalCertsTabTitle">undefined</span>
+      <span class="active-tab-label" i18n-content="personalCertsTabTitle">undefined</span>
+    </span>
+    <span id="server-certs-nav-tab" class="tab" tab-contents="serverCertsTab">
+      <span class="tab-label" i18n-content="serverCertsTabTitle">undefined</span>
+      <span class="active-tab-label" i18n-content="serverCertsTabTitle">undefined</span>
+    </span>
+    <span id="ca-certs-nav-tab" class="tab" tab-contents="caCertsTab">
+      <span class="tab-label" i18n-content="caCertsTabTitle">undefined</span>
+      <span class="active-tab-label" i18n-content="caCertsTabTitle">undefined</span>
+    </span>
+    <span id="other-certs-nav-tab" class="tab" tab-contents="otherCertsTab">
+      <span class="tab-label" i18n-content="unknownCertsTabTitle">undefined</span>
+      <span class="active-tab-label" i18n-content="unknownCertsTabTitle">undefined</span>
+    </span>
+    </div>
+    <!-- TODO(mattm): get rid of use of tables? -->
+    <!-- Tab contents -->
+    <div id="personalCertsTab" class="subpages-tab-contents">
+        <table class="certificate-tree-table">
+            <tbody>
+            <tr>
+                <td>
+                    <span i18n-content="personalCertsTabDescription">undefined</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <tree id="personalCertsTab-tree" class="certificate-tree"></tree>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="personalCertsTab-view" i18n-content="view_certificate" disabled="">undefined</button>
+                    <!-- TODO(mattm):
+                    <button id="personalCertsTab-backup-all"
+                      i18n-content="export_all_certificates"
+                      disabled></button>
+                    -->
+                    <button id="personalCertsTab-import" i18n-content="import_certificate">undefined</button>
+
+                    <button id="personalCertsTab-backup" i18n-content="export_certificate" disabled="">undefined
+                    </button>
+                    <button id="personalCertsTab-delete" i18n-content="delete_certificate" disabled="">undefined
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="serverCertsTab" class="subpages-tab-contents">
+        <table class="certificate-tree-table">
+            <tbody>
+            <tr>
+                <td>
+                    <span i18n-content="serverCertsTabDescription">undefined</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <tree id="serverCertsTab-tree" class="certificate-tree"></tree>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="serverCertsTab-view" i18n-content="view_certificate" disabled="">undefined</button>
+                    <!-- TODO(mattm):
+                    <button id="serverCertsTab-edit" i18n-content="edit_certificate"
+                      disabled></button>
+                    -->
+                    <button id="serverCertsTab-import" i18n-content="import_certificate">undefined</button>
+                    <button id="serverCertsTab-export" i18n-content="export_certificate" disabled="">undefined</button>
+                    <button id="serverCertsTab-delete" i18n-content="delete_certificate" disabled="">undefined</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="caCertsTab" class="subpages-tab-contents">
+        <table class="certificate-tree-table">
+            <tbody>
+            <tr>
+                <td>
+                    <span i18n-content="caCertsTabDescription">undefined</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <tree id="caCertsTab-tree" class="certificate-tree"></tree>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="caCertsTab-view" i18n-content="view_certificate" disabled="">undefined</button>
+                    <button id="caCertsTab-edit" i18n-content="edit_certificate" disabled="">undefined</button>
+                    <button id="caCertsTab-import" i18n-content="import_certificate">undefined</button>
+                    <button id="caCertsTab-export" i18n-content="export_certificate" disabled="">undefined</button>
+                    <button id="caCertsTab-delete" i18n-content="delete_certificate" disabled="">undefined</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="otherCertsTab" class="subpages-tab-contents">
+        <table class="certificate-tree-table">
+            <tbody>
+            <tr>
+                <td>
+                    <span i18n-content="unknownCertsTabDescription">undefined</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <tree id="otherCertsTab-tree" class="certificate-tree"></tree>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="otherCertsTab-view" i18n-content="view_certificate" disabled="">undefined</button>
+                    <button id="otherCertsTab-export" i18n-content="export_certificate" disabled="">undefined</button>
+                    <button id="otherCertsTab-delete" i18n-content="delete_certificate" disabled="">undefined</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="autofill-options" class="page" hidden="">
+    <h1 i18n-content="autofillOptionsPage">Autofill Options</h1>
+
+    <h3 i18n-content="autofillAddresses">Addresses</h3>
+
+    <div class="settings-list">
+        <list id="address-list" tabindex="0">
+            <div class="spacer" style="height: 0px; "></div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">Josh Sullivan, 248 Kennedy Drive</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">Rota Naval Base, Rota</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">Josh Sullivan, Street #</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">Mike Russell, 109 Shamrock Road</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">Log Canoe Circle, STEVENSVILLE</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">Josh Sullivan, [200-249] 235 LOG CANOE CIR</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">Josh Sullivan, 112 Arivis Ct</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">JOSHUA P SULLIVAN, 248 KENNEDY DR</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">235-G Log Canoe Circle, Stevensville</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="deletable-item">
+                <div>
+                    <div class="autofill-list-item">James Randall, 1731 New Hampshire Avenue Northwest</div>
+                </div>
+                <button class="raw-button close-button"></button>
+            </div>
+            <div class="spacer" style="height: 0px; "></div>
+        </list>
+        <div>
+            <button id="autofill-add-address" i18n-content="autofillAddAddress">Add new street address...</button>
+        </div>
+    </div>
+    <h3 i18n-content="autofillCreditCards">Credit cards</h3>
+
+    <div class="settings-list">
+        <list id="creditcard-list" tabindex="0">
+            <div class="spacer"></div>
+            <div class="spacer"></div>
+        </list>
+        <div>
+            <button id="autofill-add-creditcard" i18n-content="autofillAddCreditCard">Add new credit card...</button>
+        </div>
+    </div>
+    <div>
+
+        <a href="https://www.google.com/support/chrome/bin/answer.py?answer=142893" target="_blank"
+           i18n-content="helpButton">About Autofill</a>
+    </div>
+</div>
+
+<div id="content-settings-page" class="page" hidden="">
+    <h1 i18n-content="contentSettingsPage">Content Settings</h1>
+    <!-- Cookie filter tab contents -->
+    <section>
+        <h3 i18n-content="cookies_tab_label">Cookies</h3>
+
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="cookies" value="allow">
+                    <span i18n-content="cookies_allow">Allow local data to be set (recommended)</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="cookies" value="session">
+                    <span i18n-content="cookies_session_only">Allow local data to be set for the current session only</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="cookies" value="block">
+                    <span i18n-content="cookies_block">Block sites from setting any data</span>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input id="block-third-party-cookies" pref="profile.block_third_party_cookies" type="checkbox">
+                    <span i18n-content="cookies_block_3rd_party">Ignore exceptions and block third-party cookies from being set</span>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input id="clear-cookies-on-exit" pref="profile.clear_site_data_on_exit" type="checkbox">
+                    <span i18n-content="cookies_lso_clear_when_close" class="clear-plugin-lso-data-enabled">Clear cookies and other site and plug-in data when I close my browser</span>
+                    <span i18n-content="cookies_clear_when_close" class="clear-plugin-lso-data-disabled">Clear cookies and other site data when I close my browser</span>
+                </label>
+            </div>
+            <button class="exceptions-list-button" contenttype="cookies" i18n-content="manage_exceptions">Manage
+                exceptions...
+            </button>
+            <button id="show-cookies-button" i18n-content="cookies_show_cookies">All cookies and site data...</button>
+        </div>
+    </section>
+    <!-- Image filter -->
+    <section>
+        <h3 i18n-content="images_tab_label">Images</h3>
+
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="images" value="allow">
+                    <span i18n-content="images_allow">Show all images (recommended)</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="images" value="block">
+                    <span i18n-content="images_block">Do not show any images</span>
+                </label>
+            </div>
+            <button class="exceptions-list-button" contenttype="images" i18n-content="manage_exceptions">Manage
+                exceptions...
+            </button>
+        </div>
+    </section>
+    <!-- JavaScript filter -->
+    <section>
+        <h3 i18n-content="javascript_tab_label">JavaScript</h3>
+
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="javascript" value="allow">
+                    <span i18n-content="javascript_allow">Allow all sites to run JavaScript (recommended)</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="javascript" value="block">
+                    <span i18n-content="javascript_block">Do not allow any site to run JavaScript</span>
+                </label>
+            </div>
+            <button class="exceptions-list-button" contenttype="javascript" i18n-content="manage_exceptions">Manage
+                exceptions...
+            </button>
+        </div>
+    </section>
+    <!-- Handlers settings -->
+    <section id="handlers-section">
+        <h3 i18n-content="handlers_tab_label">Handlers</h3>
+
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="handlers" value="allow" class="handler-radio">
+                    <span i18n-content="handlers_allow">Allow sites to ask to become default handlers for protocols</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="handlers" value="block" class="handler-radio">
+                    <span i18n-content="handlers_block">Do not allow any site to handle protocols</span>
+                </label>
+            </div>
+
+            <button id="manage-handlers-button" contenttype="handlers" i18n-content="manage_handlers">Manage handlers...
+            </button>
+        </div>
+    </section>
+    <!-- Plug-ins filter -->
+    <section>
+        <h3 i18n-content="plugins_tab_label">Plug-ins</h3>
+
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="plugins" value="allow">
+                    <span i18n-content="plugins_allow">Run automatically (recommended)</span>
+                </label>
+            </div>
+            <div id="click_to_play" class="radio" style="display: none; ">
+                <label>
+                    <input type="radio" name="plugins" value="ask">
+                    <span i18n-content="plugins_ask">Click to play</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="plugins" value="block">
+                    <span i18n-content="plugins_block">Block all</span>
+                </label>
+            </div>
+            <button class="exceptions-list-button" contenttype="plugins" i18n-content="manage_exceptions">Manage
+                exceptions...
+            </button>
+            <a id="plugins-tab" href="about:plugins" i18n-content="disable_individual_plugins" target="_blank">Disable
+                individual plug-ins...</a>
+        </div>
+    </section>
+    <!-- Pop-ups filter -->
+    <section>
+        <h3 i18n-content="popups_tab_label" class="content-settings-header">Pop-ups</h3>
+
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="popups" value="allow">
+                    <span i18n-content="popups_allow">Allow all sites to show pop-ups</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="popups" value="block">
+                    <span i18n-content="popups_block">Do not allow any site to show pop-ups (recommended)</span>
+                </label>
+            </div>
+            <button class="exceptions-list-button" contenttype="popups" i18n-content="manage_exceptions">Manage
+                exceptions...
+            </button>
+        </div>
+    </section>
+    <!-- Location filter -->
+    <section>
+        <h3 i18n-content="location_tab_label">Location</h3>
+
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="location" value="allow">
+                    <span i18n-content="location_allow">Allow all sites to track my physical location</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="location" value="ask">
+                    <span i18n-content="location_ask">Ask me when a site tries to track my physical location (recommended)</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="location" value="block">
+                    <span i18n-content="location_block">Do not allow any site to track my physical location</span>
+                </label>
+            </div>
+            <button class="exceptions-list-button" contenttype="location" i18n-content="manage_exceptions">Manage
+                exceptions...
+            </button>
+        </div>
+    </section>
+    <!-- Notifications filter tab contents -->
+    <section>
+        <h3 i18n-content="notifications_tab_label">Notifications</h3>
+
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="notifications" value="allow">
+                    <span i18n-content="notifications_allow">Allow all sites to show desktop notifications</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="notifications" value="ask">
+                    <span i18n-content="notifications_ask">Ask me when a site wants to show desktop notifications (recommended)</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="notifications" value="block">
+                    <span i18n-content="notifications_block">Do not allow any site to show desktop notifications</span>
+                </label>
+            </div>
+            <button class="exceptions-list-button" contenttype="notifications" i18n-content="manage_exceptions">Manage
+                exceptions...
+            </button>
+        </div>
+    </section>
+</div>
+
+<div id="font-settings" class="page" hidden="">
+    <h1 i18n-content="fontSettingsPage">Fonts and Encoding</h1>
+    <section>
+        <h3 i18n-content="fontSettingsStandard">Standard font</h3>
+
+        <div class="font-input-div">
+            <div>
+                <select id="standard-font-family" class="font-input" datatype="string"
+                        pref="webkit.webprefs.standard_font_family" metric="Options_ChangeStandardFont" disabled="">
+                    <option>Loading...</option>
+                </select>
+            </div>
+            <div>
+                <input id="standard-font-size" type="range" min="0" max="24" pref="webkit.webprefs.default_font_size">
+
+                <div>
+                    <span i18n-content="fontSettingsSizeTiny">Tiny</span>
+                    <span i18n-content="fontSettingsSizeHuge" class="font-settings-huge">Huge</span>
+                </div>
+            </div>
+        </div>
+        <div id="standard-font-sample" class="font-sample-div"
+             style="font-size: 16px; font-family: 'Times New Roman'; ">16: Lorem ipsum dolor sit amet, consectetur
+            adipiscing elit.
+        </div>
+    </section>
+    <section>
+        <h3 i18n-content="fontSettingsSerif">Serif font</h3>
+
+        <div class="font-input-div">
+            <div>
+                <select id="serif-font-family" class="font-input" datatype="string"
+                        pref="webkit.webprefs.serif_font_family" metric="Options_ChangeSerifFont" disabled="">
+                    <option>Loading...</option>
+                </select>
+            </div>
+        </div>
+        <div id="serif-font-sample" class="font-sample-div" style="font-size: 16px; font-family: 'Times New Roman'; ">
+            16: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </div>
+    </section>
+    <section>
+        <h3 i18n-content="fontSettingsSansSerif">Sans-serif font</h3>
+
+        <div class="font-input-div">
+            <div>
+                <select id="sans-serif-font-family" class="font-input" datatype="string"
+                        pref="webkit.webprefs.sansserif_font_family" metric="Options_ChangeSansSerifFont" disabled="">
+                    <option>Loading...</option>
+                </select>
+            </div>
+        </div>
+        <div id="sans-serif-font-sample" class="font-sample-div" style="font-size: 16px; font-family: Arial; ">16: Lorem
+            ipsum dolor sit amet, consectetur adipiscing elit.
+        </div>
+    </section>
+    <section>
+        <h3 i18n-content="fontSettingsFixedWidth">Fixed-width font</h3>
+
+        <div class="font-input-div">
+            <div>
+                <select id="fixed-font-family" class="font-input" datatype="string"
+                        pref="webkit.webprefs.fixed_font_family" metric="Options_ChangeFixedFont" disabled="">
+                    <option>Loading...</option>
+                </select>
+            </div>
+        </div>
+        <div id="fixed-font-sample" class="font-sample-div" style="font-size: 13px; font-family: 'Courier New'; ">Lorem
+            ipsum dolor sit amet, consectetur adipiscing elit.
+        </div>
+    </section>
+    <section>
+        <h3 i18n-content="fontSettingsMinimumSize">Minimum font size</h3>
+
+        <div class="font-input-div">
+            <div>
+                <input id="minimum-font-size" type="range" min="0" max="15" pref="webkit.webprefs.minimum_font_size">
+
+                <div>
+                    <span i18n-content="fontSettingsSizeTiny">Tiny</span>
+                    <span i18n-content="fontSettingsSizeHuge" class="font-settings-huge">Huge</span>
+                </div>
+            </div>
+        </div>
+        <div id="minimum-font-sample" style="font-size: 6px; ">6: Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit.
+        </div>
+    </section>
+    <section>
+        <h3 i18n-content="fontSettingsEncoding">Encoding</h3>
+
+        <div class="font-input-div">
+            <div>
+                <select id="font-encoding" datatype="string" pref="intl.charset_default"
+                        metric="Options_ChangeFontEncoding" disabled="">
+                    <option>Loading...</option>
+                </select>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="languagePage" class="page" hidden="">
+    <h1 i18n-content="languagePage">Languages and Input</h1>
+
+    <div id="notification">
+        <span>&nbsp;</span>
+        <span class="link"><span class="link-color"></span></span>
+    </div>
+    <div class="language-options-header">
+        <div i18n-content="add_language_instructions">Add languages and drag to order them based on your preference.
+        </div>
+
+    </div>
+    <div class="language-options">
+        <div class="language-options-left">
+            <h3 i18n-content="languages">Languages</h3>
+            <list id="language-options-list" tabindex="0">
+                <div class="spacer"></div>
+                <div class="spacer"></div>
+            </list>
+            <div class="language-options-lower-left">
+                <button id="language-options-add-button" i18n-content="add_button">Add</button>
+            </div>
+            <div id="language-options-list-dropmarker"></div>
+        </div>
+        <div class="language-options-right">
+            <h3 id="language-options-language-name">English (United States)</h3>
+
+            <div class="language-options-contents">
+                <button id="language-options-ui-language-button" class="text-button" style="display: block; ">Google
+                    Chrome is displayed in this language
+                </button>
+            </div>
+            <div class="language-options-contents">
+                <button id="language-options-spell-check-language-button" class="text-button" style="display: block; ">
+                    This language is used for spell checking
+                </button>
+            </div>
+            <div id="language-options-ui-notification-bar" class="language-options-notification"
+                 style="display: none; ">
+                <div i18n-content="restart_required">Please close all Google Chrome windows and relaunch it for this
+                    change to take effect.
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="language-options-footer">
+
+        <div id="spell-check-option" class="checkbox">
+            <label>
+                <input id="enable-spell-check" pref="browser.enable_spellchecking" metric="Options_SpellCheck"
+                       type="checkbox">
+                <span i18n-content="enable_spell_check">Enable spell checking</span>
+            </label>
+        </div>
+        <div id="auto-spell-correction-option" class="checkbox" hidden="">
+            <label>
+                <input id="enable-auto-spell-correction" pref="browser.enable_autospellcorrect"
+                       metric="Options_AutoSpellCorrection" type="checkbox">
+                <span i18n-content="enable_auto_spell_correction">Enable automatic spell correction</span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div id="password-manager" class="page" hidden="">
+    <h1 i18n-content="passwordsPage">Passwords</h1>
+
+    <div id="password-list-headers">
+        <div id="passwords-title">
+            <h3 i18n-content="savedPasswordsTitle">Saved passwords</h3>
+        </div>
+        <div id="password-search-column">
+            <input id="password-search-box" type="search" i18n-values="placeholder:passwordSearchPlaceholder"
+                   incremental="" results="10" autosave="org.chromium.options.passwords.search"
+                   placeholder="Search passwords">
+        </div>
+    </div>
+    <list id="saved-passwords-list" class="settings-list" tabindex="0"></list>
+    <div id="saved-passwords-list-empty-placeholder" class="settings-list-empty" hidden="">
+        <span i18n-content="passwordsNoPasswordsDescription">Your saved passwords will appear here.</span>
+        <a target="_blank" i18n-content="learnMore" i18n-values="href:passwordManagerLearnMoreURL"
+           href="https://www.google.com/support/chrome/bin/answer.py?answer=95606&amp;hl=en-US">Learn more</a>
+    </div>
+    <h3 i18n-content="passwordExceptionsTitle">Never saved</h3>
+    <list id="password-exceptions-list" class="settings-list" tabindex="0"></list>
+    <div id="password-exceptions-list-empty-placeholder" hidden="" class="settings-list-empty">
+        <span i18n-content="passwordsNoExceptionsDescription">Sites which never save passwords will appear here.</span>
+        <a target="_blank" i18n-content="learnMore" i18n-values="href:passwordManagerLearnMoreURL"
+           href="https://www.google.com/support/chrome/bin/answer.py?answer=95606&amp;hl=en-US">Learn more</a>
+    </div>
+</div>
+
+<div id="searchEngineManagerPage" class="page" hidden="">
+    <h1 i18n-content="searchEngineManagerPage">Search Engines</h1>
+
+    <h3 i18n-content="defaultSearchEngineListTitle">Default search options</h3>
+    <list id="defaultSearchEngineList" class="search-engine-list settings-list" tabindex="0" inlineeditable="">
+        <div class="spacer" style="height: 0px; "></div>
+        <div class="deletable-item default">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.google.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">Google (Default)</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">google.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">
+                            {google:baseURL}search?{google:RLZ}{google:acceptedSuggestion}{google:originalQueryForSuggestion}sourceid=chrome&amp;ie={inputEncoding}&amp;q=%s
+                        </div>
+                        <input type="text" displaymode="edit" disabled=""></div>
+                </div>
+            </div>
+            <button class="raw-button close-button" disabled=""></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://search.yahoo.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">Yahoo!</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">yahoo.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://search.yahoo.com/search?ei={inputEncoding}&amp;fr=crmas&amp;p=%s</div>
+                        <input type="text" displaymode="edit" disabled=""></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.bing.com/s/wlflag.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">Bing</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">bing.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.bing.com/search?setmkt=en-US&amp;q=%s
+                        </div>
+                        <input type="text" displaymode="edit" disabled=""></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="spacer" style="height: 0px; "></div>
+    </list>
+    <h3 i18n-content="otherSearchEngineListTitle">Other search engines</h3>
+    <list id="otherSearchEngineList" class=" search-engine-list settings-list" tabindex="0" inlineeditable="">
+        <div class="spacer" style="height: 0px; "></div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.youtube.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">YouTube Video Search</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">youtube.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.youtube.com/results?search_query=%s&amp;page={startPage?}&amp;utm_source=opensearch</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://what.cd/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">What.CD Artists</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">what.cd</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://what.cd/artist.php?artistname=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://techcrunch.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">TechCrunch</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">techcrunch.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://techcrunch.com/?s=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.ultimate-guitar.com/favicon.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">ultimate-guitar.com</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">ultimate-guitar.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.ultimate-guitar.com/search.php?value=%s&amp;search_type=title</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img
+                            src="chrome://favicon/iconurl/http://sstatic.net/stackoverflow/img/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">Stack Overflow</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">stackoverflow.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://stackoverflow.com/search?q=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img
+                            src="chrome://favicon/iconurl/http://grooveshark.com/webincludes/images/favicon.ico?1">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">Grooveshark</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">listen.grooveshark.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://grooveshark.com/#/search/songs/?query=%s
+                        </div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.amazon.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">amazon.com</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">amazon.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">
+                            http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&amp;field-keywords=%s&amp;x=0&amp;y=0
+                        </div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.airbnb.com/airbnb_favicon.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">Airbnb</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">airbnb.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.airbnb.com/search?location=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://forums.slickdeals.net/favicon.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">Slickdeals Forum Search</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">slickdeals.net</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://forums.slickdeals.net/search.php?do=process&amp;forumchoice[]=9&amp;forumchoice[]=4&amp;forumchoice[]=10&amp;forumchoice[]=25&amp;query=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img
+                            src="chrome://favicon/iconurl/http://gzip.static.woot.com/App_Themes/Woot/favicon.6.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">Woot</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">woot.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">
+                            http://www.woot.com/Search/?cx=partner-pub-2332856072838068:hkwzwq-rv25&amp;cof=FORID%3A9&amp;ie=ISO-8859-1&amp;q=%s
+                        </div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img
+                            src="chrome://favicon/iconurl/http://gzip.static.woot.com/App_Themes/Wine/favicon.6.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">Wine.Woot</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">wine.woot.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">
+                            http://wine.woot.com/Search/?cx=partner-pub-2332856072838068:2a34de-xjzd&amp;cof=FORID%3A9&amp;ie=ISO-8859-1&amp;q=%s
+                        </div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://en.wikipedia.org/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">Wikipedia (en)</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">wikipedia.org</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">
+                            http://en.wikipedia.org/w/index.php?title=Special:Search&amp;search=%s
+                        </div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img
+                            src="chrome://favicon/iconurl/http://0.gravatar.com/blavatar/eba2c392818a80b22908e357a897decd?s=16&amp;d=http%3A%2F%2Fmemebase.com%2Ffavicon.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">chzmemebase</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">memebase.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://memebase.com/?s=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.retailmenot.com/favicon.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">retailmenot.com</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">retailmenot.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.retailmenot.com/search/?query=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/undefined"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">Ally</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">ally.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.ally.com/search/index.html?term=%s
+                        </div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.facebook.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">Facebook</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">facebook.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.facebook.com/search/?src=os&amp;q=%s
+                        </div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://sstatic.net/gaming/img/favicon.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">Gaming</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">gaming.stackexchange.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://gaming.stackexchange.com/search?q=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://movies.netflix.com/favicon.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">netflix.com</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">netflix.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://movies.netflix.com/WiSearch?oq=Begotten&amp;ac_posn=-1&amp;v1=%s&amp;search_submit=</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.reddit.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">reddit.com</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">reddit.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.reddit.com/search?q=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img
+                            src="chrome://favicon/iconurl/http://0.gravatar.com/blavatar/0436b3efe719df6f37dabcf76d4f8e92?s=16&amp;d=http%3A%2F%2Fkudodouche.wordpress.com%2Ffavicon.ico">
+                    </div>
+                    <div>
+                        <div class="static-text" displaymode="static">kudodouche</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">kudodouche.wordpress.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://kudodouche.wordpress.com/?s=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://s.wordpress.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">WordPress.com</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">wordpress.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://en.search.wordpress.com/?q=%s&amp;page={startPage?}</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/http://www.cnn.com/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">CNN.com</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">cnn.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://www.cnn.com/search/?query=%s</div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img
+                            src="chrome://favicon/iconurl/http://sstatic.net/skins/sketchy/img/favicon.ico"></div>
+                    <div>
+                        <div class="static-text" displaymode="static">Japanese Language and Usage</div>
+                        <input type="text" displaymode="edit"></div>
+                </div>
+                <div class="keyword-column">
+                    <div class="static-text" displaymode="static">japanese.stackexchange.com</div>
+                    <input type="text" displaymode="edit"></div>
+                <div class="url-column">
+                    <div>
+                        <div class="static-text" displaymode="static">http://japanese.stackexchange.com/search?q=%s
+                        </div>
+                        <input type="text" displaymode="edit"></div>
+                    <button class="raw-button">Make default</button>
+                </div>
+            </div>
+            <button class="raw-button close-button"></button>
+        </div>
+        <div class="deletable-item">
+            <div>
+                <div class="name-column">
+                    <div class="favicon"><img src="chrome://favicon/iconurl/undefined"></div>
+                    <div><input type="text" placeholder="Add a new search engine"></div>
+                </div>
+                <div class="keyword-column"><input type="text" placeholder="Keyword"></div>
+                <div class="url-column">
+                    <div><input type="text" placeholder="URL with %s in place of query"></div>
+                </div>
+            </div>
+            <button class="raw-button close-button" disabled=""></button>
+        </div>
+        <div class="spacer" style="height: 0px; "></div>
+    </list>
+</div>
+
+</div>
+</div>
+</div>
+<div id="subpage-sheet-container-2" class="subpage-sheet-container transparent" hidden="" style="height: 552px; ">
+    <div id="subpage-sheet-2" class="subpage-sheet">
+        <button class="raw-button close-subpage"></button>
+        <div class="subpage-sheet-contents">
+
+            <div id="cookiesViewPage" class="page" hidden="">
+                <h1 i18n-content="cookiesViewPage">Cookies and Other Data</h1>
+
+                <div id="cookies-column-headers">
+                    <div id="cookies-site-column"><h3 i18n-content="cookie_domain">Site</h3></div>
+                    <div id="cookies-data-column"><h3 i18n-content="cookie_local_data">Locally Stored Data</h3></div>
+                    <div id="remove-all-cookies-search-column">
+                        <button id="remove-all-cookies-button" i18n-content="remove_all_cookie">Remove All</button>
+                        <input id="cookies-search-box" type="search" i18n-values="placeholder:search_cookies"
+                               incremental="" results="10" autosave="org.chromium.options.cookies.search"
+                               placeholder="Search cookies">
+                    </div>
+                </div>
+                <list id="cookies-list" tabindex="0" class="cookie-list">
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </list>
+            </div>
+
+            <div id="handler-options" class="page" hidden="">
+                <h1 i18n-content="handlersPage">Protocol and MIME type Handlers</h1>
+
+                <div id="handlers-column-headers">
+                    <div class="handlers-type-column">
+                        <h3 i18n-content="handlers_type_column_header">Type</h3>
+                    </div>
+                    <div class="handlers-site-column">
+                        <h3 i18n-content="handlers_site_column_header">Site</h3>
+                    </div>
+                    <div class="handlers-remove-column"></div>
+                </div>
+                <list id="handlers-list" tabindex="0">
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </list>
+            </div>
+            <div id="content-settings-exceptions-area" class="page" hidden="">
+                <h1>Cookie and Site Data Exceptions</h1>
+
+                <div id="exception-column-headers">
+                    <div id="exception-pattern-column" i18n-content="exceptionPatternHeader">Hostname Pattern</div>
+                    <div id="exception-behavior-column" i18n-content="exceptionBehaviorHeader">Behavior</div>
+                </div>
+                <div contenttype="cookies">
+                    <list mode="normal" tabindex="0" inlineeditable="" class="settings-list">
+                        <div class="spacer" style="height: 0px; "></div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern"><input type="text"
+                                                                      placeholder="Add a new hostname pattern"></div>
+                                <select class="exception-setting">
+                                    <option value="allow">Allow</option>
+                                    <option value="session">Session only</option>
+                                    <option value="block">Block</option>
+                                </select></div>
+                            <button class="raw-button close-button" disabled=""></button>
+                        </div>
+                        <div class="spacer" style="height: 0px; "></div>
+                    </list>
+                    <div hidden="">
+                        <span class="otr-explanation" i18n-content="otr_exceptions_explanation">Exceptions below only apply to the current incognito session.</span>
+                        <list mode="otr" tabindex="0" inlineeditable="" class="settings-list">
+                            <div class="spacer" style="height: 0px; "></div>
+                            <div class="deletable-item">
+                                <div>
+                                    <div class="exception-pattern"><input type="text"
+                                                                          placeholder="Add a new hostname pattern">
+                                    </div>
+                                    <select class="exception-setting">
+                                        <option value="allow">Allow</option>
+                                        <option value="session">Session only</option>
+                                        <option value="block">Block</option>
+                                    </select></div>
+                                <button class="raw-button close-button" disabled=""></button>
+                            </div>
+                            <div class="spacer" style="height: 0px; "></div>
+                        </list>
+                    </div>
+                    <div class="flash-plugin-area">
+                        <a i18n-values="href:flash_storage_url" i18n-content="flash_storage_settings" target="_blank"
+                           href="http://www.adobe.com/go/settmgr_storage_en">Adobe Flash Player storage settings...</a>
+                    </div>
+                </div>
+                <div contenttype="images" hidden="">
+                    <list mode="normal" tabindex="0" inlineeditable="" class="settings-list">
+                        <div class="spacer" style="height: 0px; "></div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern"><input type="text"
+                                                                      placeholder="Add a new hostname pattern"></div>
+                                <select class="exception-setting">
+                                    <option value="allow">Allow</option>
+                                    <option value="block">Block</option>
+                                </select></div>
+                            <button class="raw-button close-button" disabled=""></button>
+                        </div>
+                        <div class="spacer" style="height: 0px; "></div>
+                    </list>
+                    <div hidden="">
+                        <span class="otr-explanation" i18n-content="otr_exceptions_explanation">Exceptions below only apply to the current incognito session.</span>
+                        <list mode="otr" tabindex="0" inlineeditable="" class="settings-list">
+                            <div class="spacer" style="height: 0px; "></div>
+                            <div class="deletable-item">
+                                <div>
+                                    <div class="exception-pattern"><input type="text"
+                                                                          placeholder="Add a new hostname pattern">
+                                    </div>
+                                    <select class="exception-setting">
+                                        <option value="allow">Allow</option>
+                                        <option value="block">Block</option>
+                                    </select></div>
+                                <button class="raw-button close-button" disabled=""></button>
+                            </div>
+                            <div class="spacer" style="height: 0px; "></div>
+                        </list>
+                    </div>
+                </div>
+                <div contenttype="javascript" hidden="">
+                    <list mode="normal" tabindex="0" inlineeditable="" class="settings-list">
+                        <div class="spacer" style="height: 0px; "></div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern"><input type="text"
+                                                                      placeholder="Add a new hostname pattern"></div>
+                                <select class="exception-setting">
+                                    <option value="allow">Allow</option>
+                                    <option value="block">Block</option>
+                                </select></div>
+                            <button class="raw-button close-button" disabled=""></button>
+                        </div>
+                        <div class="spacer" style="height: 0px; "></div>
+                    </list>
+                    <div hidden="">
+                        <span class="otr-explanation" i18n-content="otr_exceptions_explanation">Exceptions below only apply to the current incognito session.</span>
+                        <list mode="otr" tabindex="0" inlineeditable="" class="settings-list">
+                            <div class="spacer" style="height: 0px; "></div>
+                            <div class="deletable-item">
+                                <div>
+                                    <div class="exception-pattern"><input type="text"
+                                                                          placeholder="Add a new hostname pattern">
+                                    </div>
+                                    <select class="exception-setting">
+                                        <option value="allow">Allow</option>
+                                        <option value="block">Block</option>
+                                    </select></div>
+                                <button class="raw-button close-button" disabled=""></button>
+                            </div>
+                            <div class="spacer" style="height: 0px; "></div>
+                        </list>
+                    </div>
+                </div>
+                <div contenttype="plugins" hidden="">
+                    <list mode="normal" tabindex="0" inlineeditable="" class="settings-list">
+                        <div class="spacer" style="height: 0px; "></div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">[*.]www.wcur.org</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern"><input type="text"
+                                                                      placeholder="Add a new hostname pattern"></div>
+                                <select class="exception-setting">
+                                    <option value="allow">Allow</option>
+                                    <option value="block">Block</option>
+                                </select></div>
+                            <button class="raw-button close-button" disabled=""></button>
+                        </div>
+                        <div class="spacer" style="height: 0px; "></div>
+                    </list>
+                    <div hidden="">
+                        <span class="otr-explanation" i18n-content="otr_exceptions_explanation">Exceptions below only apply to the current incognito session.</span>
+                        <list mode="otr" tabindex="0" inlineeditable="" class="settings-list">
+                            <div class="spacer" style="height: 0px; "></div>
+                            <div class="deletable-item">
+                                <div>
+                                    <div class="exception-pattern"><input type="text"
+                                                                          placeholder="Add a new hostname pattern">
+                                    </div>
+                                    <select class="exception-setting">
+                                        <option value="allow">Allow</option>
+                                        <option value="block">Block</option>
+                                    </select></div>
+                                <button class="raw-button close-button" disabled=""></button>
+                            </div>
+                            <div class="spacer" style="height: 0px; "></div>
+                        </list>
+                    </div>
+                </div>
+                <div contenttype="popups" hidden="">
+                    <list mode="normal" tabindex="0" inlineeditable="" class="settings-list">
+                        <div class="spacer" style="height: 0px; "></div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">[*.]www.bourbonstreetbaltimore.com
+                                    </div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">[*.]www.itstheend.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern"><input type="text"
+                                                                      placeholder="Add a new hostname pattern"></div>
+                                <select class="exception-setting">
+                                    <option value="allow">Allow</option>
+                                    <option value="block">Block</option>
+                                </select></div>
+                            <button class="raw-button close-button" disabled=""></button>
+                        </div>
+                        <div class="spacer" style="height: 0px; "></div>
+                    </list>
+                    <div hidden="">
+                        <span class="otr-explanation" i18n-content="otr_exceptions_explanation">Exceptions below only apply to the current incognito session.</span>
+                        <list mode="otr" tabindex="0" inlineeditable="" class="settings-list">
+                            <div class="spacer" style="height: 0px; "></div>
+                            <div class="deletable-item">
+                                <div>
+                                    <div class="exception-pattern"><input type="text"
+                                                                          placeholder="Add a new hostname pattern">
+                                    </div>
+                                    <select class="exception-setting">
+                                        <option value="allow">Allow</option>
+                                        <option value="block">Block</option>
+                                    </select></div>
+                                <button class="raw-button close-button" disabled=""></button>
+                            </div>
+                            <div class="spacer" style="height: 0px; "></div>
+                        </list>
+                    </div>
+                </div>
+                <div contenttype="location" hidden="">
+                    <list mode="normal" tabindex="0" inlineeditable="" class="settings-list">
+                        <div class="spacer" style="height: 0px; "></div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">broadbandmap.gov</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">dealers.vw.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">destmapper.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">flixster.rottentomatoes.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">savedbythegoog.appspot.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">undefined</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static"> embedded on playground.html5rocks.com
+                                    </div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">twitter.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Block</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="spacer" style="height: 0px; "></div>
+                    </list>
+                </div>
+                <div contenttype="notifications" hidden="">
+                    <list mode="normal" tabindex="0" inlineeditable="" class="settings-list">
+                        <div class="spacer" style="height: 0px; "></div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">savedbythegoog.appspot.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">0xfe.muthanna.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">slides.html5rocks.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Allow</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="deletable-item">
+                            <div>
+                                <div class="exception-pattern">
+                                    <div class="static-text" displaymode="static">https://mail.google.com</div>
+                                    <input type="text" displaymode="edit"></div>
+                                <span class="exception-setting" displaymode="static">Block</span><select
+                                    class="exception-setting" displaymode="edit">
+                                <option value="allow">Allow</option>
+                                <option value="block">Block</option>
+                            </select></div>
+                            <button class="raw-button close-button"></button>
+                        </div>
+                        <div class="spacer" style="height: 0px; "></div>
+                    </list>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<list tabindex="0" class="autocomplete-suggestions" hidden=""></list>
+</div>
+</body>
+</html>
