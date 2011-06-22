@@ -143,8 +143,8 @@
                 _gaq.push(['_trackEvent', 'omnibox command: sk (skip)']);
                 sendCommand('nextSong');
             } else if (text.toLowerCase().match('tu')) {
-                _gaq.push(['_trackEvent', 'omnibox command: tu (thumbs up)']);
                 sendCommand('thumbsUp');
+//                _gaq.push(['_trackEvent', 'omnibox command: tu (thumbs up)']);
             } else if (text.toLowerCase().match('td')) {
                 _gaq.push(['_trackEvent', 'omnibox command: td (thumbs down)']);
                 sendCommand('thumbsDown');
